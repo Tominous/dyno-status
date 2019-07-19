@@ -38,5 +38,5 @@ A Discord Bot which will show the real-time status of Dyno
 
 ## Release History (excluding minor bug fixes)
 
-* `19 Jul 2019` 
-    * 0.0.1 - Initial Release
+* 19 Jul 2019
+    * `0.0.1` - Initial Release
