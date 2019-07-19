@@ -34,7 +34,7 @@ function formatter(name, server){
     const clusterOutageCount = clusterOutage.length
     const clusterProblems = `${clusterOutageCount}/24 clusters with an outage`
     const partialOutage = `${clusterOutage.filter(b => b.result.connectedCount > 3).length}/${clusterOutageCount} Partial Outage`
-    const majorOutage = `${clusterOutage.filter(b => !b.result && b.result.connectedCount < 4).length}/${clusterOutageCount} Major Outage`
+    const majorOutage = `${clusterOutage.filter(b => !b.result || b.result.connectedCount < 4).length}/${clusterOutageCount} Major Outage`
     const percentage = Number(math.eval(shardsConnected)).toFixed(4)*100
     shardsConnected = shardsConnected+' shards connected'
     const serverGuildCount = server.filter(s => s.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)
