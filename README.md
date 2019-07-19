@@ -36,6 +36,6 @@ A Discord Bot which will show the real-time status of Dyno
  - Although I am a Trusted member of Dyno, Dyno has no affiliation or relation with this project in any way. This was my own personal project, and I may remove this repository at the developer's request.
  - The bot was built on Node.js 10.16.0 LTS. I will support Node versions 10+, however if bugs occur on versions below Node 10, I will not fix them. However, if you wish to fix any bugs relating to this, feel free to make a PR.
 
-## Release History
+## Release History (excluding minor bug fixes)
 
-- 0.0.1 Initial Release
+- `0.0.1` 19 Jul 2019 - Initial Release
