@@ -68,7 +68,7 @@ async function req(){
         const clusterProblems = `${servers.map(a => a.status.filter(s => s.result).filter(b => b.result.shardCount !== b.result.connectedCount).length).reduce((a,b) => a+b,0)}/144 clusters with problems`
         const overallPercentage = Number(math.eval(shardsConnected)).toFixed(4)*100
         shardsConnected = shardsConnected+' shards connected'
-        const totalGuilds = servers.map(s => s.status.map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
+        const totalGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
         const unavailableGuilds = servers.map(s => s.status.map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
         const guildPerc = (100 - unavailableGuilds / totalGuilds).toFixed(5) * 1
         let color;
