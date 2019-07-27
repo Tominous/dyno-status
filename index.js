@@ -58,7 +58,31 @@ function formatter(name, server){
 async function req(){
     const servers = []
     try {
-        const {data} = await axios.get('https://dyno.gg/api/status')
+        let Overview;
+        let Titan;
+        let Atlas;
+        let Pandora;
+        let Hyperion;
+        let Enceladus;
+        let Janus;
+        const {data} = await axios.get('https://dyno.gg/api/status').catch((error)=>{
+            const errMessage = error.message
+            Overview = {content:`**Error!**\n${errMessage}`,embed:null}
+            Titan = {content:`**Error!**\n${errMessage}`,embed:null}
+            Atlas = {content:`**Error!**\n${errMessage}`,embed:null}
+            Pandora = {content:`**Error!**\n${errMessage}`,embed:null}
+            Hyperion = {content:`**Error!**\n${errMessage}`,embed:null}
+            Enceladus = {content:`**Error!**\n${errMessage}`,embed:null}
+            Janus = {content:`**Error!**\n${errMessage}`,embed:null}
+            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Overview}`,true,Overview)
+            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Titan}`,true,Titan)
+            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Atlas}`,true,Atlas)
+            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Pandora}`,true,Pandora)
+            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Hyperion}`,true,Hyperion)
+            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Enceladus}`,true,Enceladus)
+            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Janus}`,true,Janus)
+            return
+        })
         const info = Object.values(data)
         const name = Object.keys(data)
         for(const a of info){
@@ -69,14 +93,14 @@ async function req(){
         const overallPercentage = Number(math.eval(shardsConnected)).toFixed(4)*100
         shardsConnected = shardsConnected+' shards connected'
         const totalGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-        const unavailableGuilds = servers.map(s => s.status.map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
+        const unavailableGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
         const guildPerc = (100 - unavailableGuilds / totalGuilds).toFixed(5) * 1
         let color;
         if(overallPercentage >= 80) color = 124622
         else if(overallPercentage >= 50) color = 16751360
         else if(overallPercentage < 50) color = 16728395
         else color = undefined
-        const Overview = {
+        Overview = {
             content:'',
             embed: {
                 title:'Overview',
@@ -86,12 +110,12 @@ async function req(){
                 color:color
             }
         }
-        const Titan = {content: '',embed:formatter(servers[0].server,servers[0].status)}
-        const Atlas = {content: '',embed:formatter(servers[1].server,servers[1].status)}
-        const Pandora = {content: '',embed:formatter(servers[2].server,servers[2].status)}
-        const Hyperion = {content: '',embed:formatter(servers[3].server,servers[3].status)}
-        const Enceladus = {content: '',embed:formatter(servers[4].server,servers[4].status)}
-        const Janus = {content: '',embed:formatter(servers[5].server,servers[5].status)}
+        Titan = {content: '',embed:formatter(servers[0].server,servers[0].status)}
+        Atlas = {content: '',embed:formatter(servers[1].server,servers[1].status)}
+        Pandora = {content: '',embed:formatter(servers[2].server,servers[2].status)}
+        Hyperion = {content: '',embed:formatter(servers[3].server,servers[3].status)}
+        Enceladus = {content: '',embed:formatter(servers[4].server,servers[4].status)}
+        Janus = {content: '',embed:formatter(servers[5].server,servers[5].status)}
         client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Overview}`,true,Overview)
         client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Titan}`,true,Titan)
         client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Atlas}`,true,Atlas)
