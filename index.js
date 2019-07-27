@@ -28,17 +28,17 @@ function formatter(name, server){
             fields.push(formatted)
         }
     }
-    let shardsConnected = `${server.filter(s => s.result).map(a => a.result.connectedCount).reduce((a,b) => a+b,0)}/144`
+    let shardsConnected = server.filter(s => s.result).map(a => a.result.connectedCount).reduce((a,b) => a+b,0)
     const clusterOutage = server.filter(a => !a.result || (a.result && a.result.shardCount !== a.result.connectedCount))
     const clusterOutageCount = clusterOutage.length
     const clusterProblems = `${clusterOutageCount}/24 clusters with an outage`
     const partialOutage = `${clusterOutage.filter(b => b.result.connectedCount > 3).length}/${clusterOutageCount} Partial Outage`
     const majorOutage = `${clusterOutage.filter(b => !b.result || b.result.connectedCount < 4).length}/${clusterOutageCount} Major Outage`
-    const percentage = Number(math.eval(shardsConnected)).toFixed(4)*100
-    shardsConnected = shardsConnected+' shards connected'
+    const percentage = ((shardsConnected / 144)*100).toFixed(5)*1
+    shardsConnected = shardsConnected+'/144 shards connected'
     const serverGuildCount = server.filter(s => s.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)
     const serverUnavailableCount = server.filter(s => s.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)
-    const serverGuildPerc = (100 - serverUnavailableCount/serverGuildCount).toFixed(5) * 1 //fix unnecessary decimal places
+    const serverGuildPerc = ((1 - serverUnavailableCount/serverGuildCount)*100).toFixed(5) * 1 //fix unnecessary decimal places
     let color;
     if(percentage >= 90) color = 124622
     else if(percentage >= 75) color = 16751360
@@ -87,13 +87,13 @@ async function req(){
         for(const a of info){
             servers.push({server: name[info.indexOf(a)], status:a})
         }
-        let shardsConnected = `${servers.map(a => a.status.filter(s => s.result).map(b => b.result.connectedCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)}/864`
+        let shardsConnected = servers.map(a => a.status.filter(s => s.result).map(b => b.result.connectedCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
         const clusterProblems = `${servers.map(a => a.status.filter(s => s.result).filter(b => b.result.shardCount !== b.result.connectedCount).length).reduce((a,b) => a+b,0)}/144 clusters with problems`
-        const overallPercentage = Number(math.eval(shardsConnected)).toFixed(4)*100
-        shardsConnected = shardsConnected+' shards connected'
+        const overallPercentage = ((shardsConnected/864)*100).toFixed(5)*1
+        shardsConnected = shardsConnected+'/864 shards connected'
         const totalGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
         const unavailableGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-        const guildPerc = (100 - unavailableGuilds / totalGuilds).toFixed(5) * 1
+        const guildPerc = ((1 - unavailableGuilds / totalGuilds)*100).toFixed(5)*1
         let color;
         if(overallPercentage >= 80) color = 124622
         else if(overallPercentage >= 50) color = 16751360
