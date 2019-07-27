@@ -1,5 +1,5 @@
 {
-    "token":"Put Bot Token Here"
+    "token":"Put Bot Token Here",
     "channel":"Channel ID",
     "messages":null
 }
