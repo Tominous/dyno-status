@@ -122,7 +122,6 @@ async function req(){
         client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Hyperion}`,true,Hyperion)
         client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Enceladus}`,true,Enceladus)
         client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Janus}`,true,Janus)
-        console.log(`Status successfully refreshed at ${new Date().toString()}.`)
     } catch (error) {
         console.error(error)
     }
