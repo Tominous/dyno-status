@@ -1,6 +1,6 @@
 {
   "name": "dyno-status",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "A Discord Bot which will show the real-time status of Dyno",
   "main": "index.js",
   "scripts": {
