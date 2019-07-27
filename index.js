@@ -1,7 +1,6 @@
-const token = '' //Put your token here
-
 // DO NOT REMOVE ANY OF THE BELOW
 let config = require('./config.json')
+const token = config.token
 const fs = require('fs')
 const Eris = require('eris')
 const client = new Eris(token)
