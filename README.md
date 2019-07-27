@@ -15,7 +15,7 @@ A Discord Bot which will show the real-time status of Dyno
 2) Press New Application, call it whatever you want to name your bot
 3) Head to the Bot tab, Add Bot
 4) Copy the bot token - **__DO NOT SHARE THIS WITH ANYONE__**
-5) Put the bot token in between the `''` on the first line of `index.js`, save
+5) Put the bot token in between the second `""` on the second line of `config.json`, save
 6) Head back to the Developer Portal, open the OAuth2 tab
 7) Under `Scopes`, tick only the `bot` option
 8) Give the bot `Send Messages` and `Embed Links` **IMPORTANT!**, the rest of the permissions are optional
@@ -36,7 +36,10 @@ A Discord Bot which will show the real-time status of Dyno
  - Although I am a Trusted member of Dyno, Dyno has no affiliation or relation with this project in any way. This was my own personal project, and I may remove this repository at the developer's request.
  - The bot was built on Node.js 10.16.0 LTS. I will support Node versions 10+, however if bugs occur on versions below Node 10, I will not fix them. However, if you wish to fix any bugs relating to this, feel free to make a PR.
 
-## Release History (excluding minor bug fixes)
+## Release History
 
 * 19 Jul 2019
     * `0.0.1` - Initial Release
+* 27 Jul 2019
+    * `0.0.2` - added API fail catch and fixed undefined bug
+    * `0.1.0` - Moved bot token to config for ease of update - SET UP FROM SCRATCH IF YOU HAVE VERSION 0.0.1
