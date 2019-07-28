@@ -103,7 +103,7 @@ async function req(){
             for(const hi of servers){
                 try{
                     const haha = formatter(hi.server,hi.status)
-                    messages.push(haha)
+                    messages.push({content:'',embed:haha})
                 }
                 catch(error){
                     messages.push({content:`**Error!**\n${error.message}`,embed:null})
