@@ -115,13 +115,13 @@ async function req(){
         await request()
         info()
         serverInfo()
+        for(const id of config.messages){
+            const information = messages[config.messages.indexOf(id)]
+            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${id}`,true, information)
+        }
     }
     catch(error){
         return console.error(error)
-    }
-    for(const id of config.messages){
-        const information = messages[config.messages.indexOf(id)]
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${id}`,true, information)
     }
 }
 
