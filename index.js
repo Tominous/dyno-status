@@ -56,74 +56,72 @@ function formatter(name, server){
 
 async function req(){
     const servers = []
-    try {
-        let Overview;
-        let Titan;
-        let Atlas;
-        let Pandora;
-        let Hyperion;
-        let Enceladus;
-        let Janus;
-        const {data} = await axios.get('https://dyno.gg/api/status').catch((error)=>{
-            const errMessage = error.message
-            Overview = {content:`**Error!**\n${errMessage}`,embed:null}
-            Titan = {content:`**Error!**\n${errMessage}`,embed:null}
-            Atlas = {content:`**Error!**\n${errMessage}`,embed:null}
-            Pandora = {content:`**Error!**\n${errMessage}`,embed:null}
-            Hyperion = {content:`**Error!**\n${errMessage}`,embed:null}
-            Enceladus = {content:`**Error!**\n${errMessage}`,embed:null}
-            Janus = {content:`**Error!**\n${errMessage}`,embed:null}
-            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Overview}`,true,Overview)
-            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Titan}`,true,Titan)
-            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Atlas}`,true,Atlas)
-            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Pandora}`,true,Pandora)
-            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Hyperion}`,true,Hyperion)
-            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Enceladus}`,true,Enceladus)
-            client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Janus}`,true,Janus)
-            return
-        })
-        const info = Object.values(data)
-        const name = Object.keys(data)
-        for(const a of info){
-            servers.push({server: name[info.indexOf(a)], status:a})
-        }
-        let shardsConnected = servers.map(a => a.status.filter(s => s.result).map(b => b.result.connectedCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-        const clusterProblems = `${servers.map(a => a.status.filter(s => s.result).filter(b => b.result.shardCount !== b.result.connectedCount).length).reduce((a,b) => a+b,0)}/144 clusters with problems`
-        const overallPercentage = ((shardsConnected/864)*100).toFixed(5)*1
-        shardsConnected = shardsConnected+'/864 shards connected'
-        const totalGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-        const unavailableGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-        const guildPerc = ((1 - unavailableGuilds / totalGuilds)*100).toFixed(5)*1
-        let color;
-        if(overallPercentage >= 80) color = 124622
-        else if(overallPercentage >= 50) color = 16751360
-        else if(overallPercentage < 50) color = 16728395
-        else color = undefined
-        Overview = {
-            content:'',
-            embed: {
-                title:'Overview',
-                description:`${shardsConnected}\n${clusterProblems}\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,
-                footer:{text:'Last updated'},
-                timestamp: new Date(),
-                color:color
+    const messages = []
+    async function request(){
+        try{
+            const {data} = await axios.get('https://dyno.gg/api/status').catch((error)=>{
+            const info = Object.values(data)
+            const name = Object.keys(data)
+            for(const a of info){
+                servers.push({server: name[info.indexOf(a)], status:a})
             }
         }
-        Titan = {content: '',embed:formatter(servers[0].server,servers[0].status)}
-        Atlas = {content: '',embed:formatter(servers[1].server,servers[1].status)}
-        Pandora = {content: '',embed:formatter(servers[2].server,servers[2].status)}
-        Hyperion = {content: '',embed:formatter(servers[3].server,servers[3].status)}
-        Enceladus = {content: '',embed:formatter(servers[4].server,servers[4].status)}
-        Janus = {content: '',embed:formatter(servers[5].server,servers[5].status)}
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Overview}`,true,Overview)
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Titan}`,true,Titan)
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Atlas}`,true,Atlas)
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Pandora}`,true,Pandora)
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Hyperion}`,true,Hyperion)
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Enceladus}`,true,Enceladus)
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${config.messages.Janus}`,true,Janus)
-    } catch (error) {
-        console.error(error)
+        catch(error){
+            for(const lol of config.messages){
+                messages.push(error.message)
+            }
+        }
+    }
+    function info(){
+        try {
+            let shardsConnected = servers.map(a => a.status.filter(s => s.result).map(b => b.result.connectedCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
+            const clusterProblems = `${servers.map(a => a.status.filter(s => s.result).filter(b => b.result.shardCount !== b.result.connectedCount).length).reduce((a,b) => a+b,0)}/144 clusters with problems`
+            const overallPercentage = ((shardsConnected/864)*100).toFixed(5)*1
+            shardsConnected = shardsConnected+'/864 shards connected'
+            const totalGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
+            const unavailableGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
+            const guildPerc = ((1 - unavailableGuilds / totalGuilds)*100).toFixed(5)*1
+            let color;
+            if(overallPercentage >= 80) color = 124622
+            else if(overallPercentage >= 50) color = 16751360
+            else if(overallPercentage < 50) color = 16728395
+            else color = undefined
+            return messages.push({
+                content:'',
+                embed: {
+                    title:'Overview',
+                    description:`${shardsConnected}\n${clusterProblems}\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,
+                    footer:{text:'Last updated'},
+                    timestamp: new Date(),
+                    color:color
+                }
+            })
+        }catch(error){
+            messages.push({content:`**Error!**\n${error.message}`,embed:null})
+        }
+    }
+    function serverInfo(){
+        for(const hi of servers){
+            try{
+                const haha = formatter(hi.server,hi.status)
+                messages.push(haha)
+            }
+            catch(error){
+                messages.push({content:`**Error!**\n${error.message}`,embed:null})
+            }
+        }
+    }
+    try{
+        await request()
+        info()
+        serverInfo()
+    }
+    catch(error){
+        return console.error(error)
+    }
+    for(const id of config.messages){
+        const information = messages[config.messages.indexOf(I'd)]
+        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${I'd}`,true, information)
     }
 }
 
@@ -156,13 +154,18 @@ client.on('ready',()=>{
                 hyperion = hyperion.id
                 enceladus = enceladus.id
                 janus = janus.id
-                config.messages = {Overview:overview,Titan:titan,Atlas:atlas,Pandora:pandora,Hyperion:hyperion,Enceladus:enceladus,Janus:janus}
+                config.messages = [overview,titan,atlas,pandora,hyperion,enceladus,janus]
                 await fs.writeFileSync(__dirname+'/config.json',JSON.stringify(config)) //Saves it in case bot restarts
             } catch (error) {
                 throw new Error(error.stack)
             }
         }
         setup()
+        run()
+    }
+    else if(typeof config.messages === 'object'){
+        config.messages = Object.values(config.messages)
+        await fs.writeFileSync(__dirname+'/config.json',JSON.stringify(config)) 
         run()
     }
     else run()
