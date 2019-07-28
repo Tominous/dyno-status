@@ -115,7 +115,7 @@ async function req(){
     }
     try{
         for(const id of config.messages){
-            const information = messages[config.messages.indexOf(id)]
+            information = messages[config.messages.indexOf(id)]
             //console.log(information)
             client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${id}`,true, information)
         }
