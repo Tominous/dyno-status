@@ -111,7 +111,7 @@ async function req(){
             }
         }
         info()
-        serverinfo()
+        serverInfo()
     }
     try{
         for(const id of config.messages){
