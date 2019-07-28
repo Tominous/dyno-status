@@ -114,12 +114,12 @@ async function req(){
         serverInfo()
     }
     try{
-        for(const id of config.messages){
+        config.messages.forEach((id)=>{
             const information = messages[config.messages.indexOf(id)]
             //console.log(information)
             const blah = await client.editMessage(config.channel,id,information)
             console.log(blah)
-        }
+        })
     }
     catch(error){
         return console.error(error)
