@@ -44,3 +44,5 @@ A Discord Bot which will show the real-time status of Dyno
     * `0.0.2` - added API fail catch and fixed undefined bug
     * `0.1.0` - Moved bot token to config for ease of update - SET UP FROM SCRATCH IF YOU HAVE VERSION 0.0.1
     * `0.1.1` - Removed console log
+* 28 Jul 2019
+    * `0.1.2` - Rewrote functions/requests for better handling
