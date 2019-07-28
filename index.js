@@ -57,64 +57,63 @@ function formatter(name, server){
 async function req(){
     const servers = []
     const messages = []
-    async function request(){
-        try{
-            const {data} = await axios.get('https://dyno.gg/api/status')
-            const info = Object.values(data)
-            const name = Object.keys(data)
-            for(const a of info){
-                servers.push({server: name[info.indexOf(a)], status:a})
-            }
-        }
-        catch(error){
-            for(const lol of config.messages){
-                messages.push(error.message)
-            }
+    try{
+        const {data} = await axios.get('https://dyno.gg/api/status')
+        const info = Object.values(data)
+        const name = Object.keys(data)
+        for(const a of info){
+            servers.push({server: name[info.indexOf(a)], status:a})
         }
     }
-    function info(){
-        try {
-            let shardsConnected = servers.map(a => a.status.filter(s => s.result).map(b => b.result.connectedCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-            const clusterProblems = `${servers.map(a => a.status.filter(s => s.result).filter(b => b.result.shardCount !== b.result.connectedCount).length).reduce((a,b) => a+b,0)}/144 clusters with problems`
-            const overallPercentage = ((shardsConnected/864)*100).toFixed(5)*1
-            shardsConnected = shardsConnected+'/864 shards connected'
-            const totalGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-            const unavailableGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-            const guildPerc = ((1 - unavailableGuilds / totalGuilds)*100).toFixed(5)*1
-            let color;
-            if(overallPercentage >= 80) color = 124622
-            else if(overallPercentage >= 50) color = 16751360
-            else if(overallPercentage < 50) color = 16728395
-            else color = undefined
-            return messages.push({
-                content:'',
-                embed: {
-                    title:'Overview',
-                    description:`${shardsConnected}\n${clusterProblems}\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,
-                    footer:{text:'Last updated'},
-                    timestamp: new Date(),
-                    color:color
-                }
-            })
-        }catch(error){
-            messages.push({content:`**Error!**\n${error.message}`,embed:null})
+    catch(error){
+        for(const lol of config.messages){
+            messages.push(error.message)
         }
     }
-    function serverInfo(){
-        for(const hi of servers){
-            try{
-                const haha = formatter(hi.server,hi.status)
-                messages.push(haha)
-            }
-            catch(error){
+    if(!messages[0]){
+        function info(){
+            try {
+                let shardsConnected = servers.map(a => a.status.filter(s => s.result).map(b => b.result.connectedCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
+                const clusterProblems = `${servers.map(a => a.status.filter(s => s.result).filter(b => b.result.shardCount !== b.result.connectedCount).length).reduce((a,b) => a+b,0)}/144 clusters with problems`
+                const overallPercentage = ((shardsConnected/864)*100).toFixed(5)*1
+                shardsConnected = shardsConnected+'/864 shards connected'
+                const totalGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
+                const unavailableGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
+                const guildPerc = ((1 - unavailableGuilds / totalGuilds)*100).toFixed(5)*1
+                let color;
+                if(overallPercentage >= 80) color = 124622
+                else if(overallPercentage >= 50) color = 16751360
+                else if(overallPercentage < 50) color = 16728395
+                else color = undefined
+                return messages.push({
+                    content:'',
+                    embed: {
+                        title:'Overview',
+                        description:`${shardsConnected}\n${clusterProblems}\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,
+                        footer:{text:'Last updated'},
+                        timestamp: new Date(),
+                        color:color
+                    }
+                })
+            }catch(error){
                 messages.push({content:`**Error!**\n${error.message}`,embed:null})
             }
         }
+        function serverInfo(){
+            for(const hi of servers){
+                try{
+                    const haha = formatter(hi.server,hi.status)
+                    messages.push(haha)
+                }
+                catch(error){
+                    messages.push({content:`**Error!**\n${error.message}`,embed:null})
+                }
+            }
+        }
+        info()
+        serverinfo()
     }
     try{
-        await request()
-        info()
-        serverInfo()
         for(const id of config.messages){
             const information = messages[config.messages.indexOf(id)]
             console.log(information)
