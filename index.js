@@ -59,7 +59,7 @@ async function req(){
     const messages = []
     async function request(){
         try{
-            const {data} = await axios.get('https://dyno.gg/api/status').catch((error)=>{
+            const {data} = await axios.get('https://dyno.gg/api/status')
             const info = Object.values(data)
             const name = Object.keys(data)
             for(const a of info){
@@ -120,8 +120,8 @@ async function req(){
         return console.error(error)
     }
     for(const id of config.messages){
-        const information = messages[config.messages.indexOf(I'd)]
-        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${I'd}`,true, information)
+        const information = messages[config.messages.indexOf(id)]
+        client.requestHandler.request('PATCH',`/channels/${config.channel}/messages/${id}`,true, information)
     }
 }
 
@@ -132,7 +132,7 @@ function run(){
     },20000)
 }
 
-client.on('ready',()=>{
+client.on('ready',async ()=>{
     client.editStatus('online',{type:3,name:'dyno.gg/status'})
     console.log(`Logged in as ${client.user.username}#${client.user.discriminator} at ${new Date().toString()}`)
     if(!config.channel) throw new Error('Channel ID is invalid')
@@ -165,7 +165,7 @@ client.on('ready',()=>{
     }
     else if(typeof config.messages === 'object'){
         config.messages = Object.values(config.messages)
-        await fs.writeFileSync(__dirname+'/config.json',JSON.stringify(config)) 
+        await fs.writeFileSync(__dirname+'/config.json',JSON.stringify(config))
         run()
     }
     else run()
