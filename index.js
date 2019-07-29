@@ -92,7 +92,7 @@ async function req(){
                     embed: {
                         title:'Dyno Status',
                         fields:[
-                            {name:'Overview',value:`${shardsConnected}\n${clusterProblems}\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,inline:true},
+                            {name:'Overview',value:`${shardsConnected}**     **\n${clusterProblems}**     **\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,inline:true},
                             {name:'Servers',value:jumpLinks,inline:true}],
                         footer:{text:'Last updated'},
                         timestamp: new Date(),
