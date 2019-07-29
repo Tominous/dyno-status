@@ -140,7 +140,8 @@ async function req(){
     try{
         for(const id of config.messages){
             const information = messages[config.messages.indexOf(id)]
-            client.editMessage(config.channel,id,information)
+            console.log(information)
+            //client.editMessage(config.channel,id,information)
         }
     }
     catch(error){
