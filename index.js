@@ -170,7 +170,7 @@ client.on('ready',async ()=>{
                 throw new Error(error.stack)
             }
         }
-        setup()
+        await setup()
         run()
     }
     else if(!config.messages[7]){
