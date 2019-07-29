@@ -86,13 +86,24 @@ async function req(){
                 else if(overallPercentage < 65) color = 16728395
                 else color = undefined
                 const guildID = client.getChannel(config.channel).guild.id
-                const jumpLinks = config.messages.slice(1,7).map(l => `[${servers.filter(a => a)[config.messages.slice(1,7).indexOf(l)].server}](https://discordapp.com/channels/${guildID}/${config.channel}/${l})`).join('\n')
+                const jumpLinks = config.messages.slice(1,7).map(l => {
+                    const server = servers.filter(a => a)[config.messages.slice(1,7).indexOf(l)]
+                    let serverPerc = server.filter(s => s.result).map(a => a.result.connectedCount).reduce((a,b) => a+b,0)
+                    let serverPercEmoji
+                    if(serverPerc/144 >= 0.9) serverPercEmoji = '✅'
+                    else if(serverPerc/144 >= 0.75) serverPercEmoji = '⚠'
+                    else if(serverPerc/144 < 0.75) serverPercEmoji = '❗'
+                    else serverPercEmoji = '❔'
+                    serverPerc = `${serverPerc}/144 shards`
+                    const serverName = server.server
+                    return `${serverPercEmoji} [${serverName} (${serverPerc})](https://discordapp.com/channels/${guildID}/${config.channel}/${l})`
+                }).join('\n')
                 return {
                     content:'',
                     embed: {
                         title:'Dyno Status',
                         fields:[
-                            {name:'Overview',value:`${shardsConnected}**     **\n${clusterProblems}**     **\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,inline:true},
+                            {name:'Overview',value:`${shardsConnected}\n${clusterProblems}\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,inline:true},
                             {name:'Servers',value:jumpLinks,inline:true}],
                         footer:{text:'Last updated'},
                         timestamp: new Date(),
