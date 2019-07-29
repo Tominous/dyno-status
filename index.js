@@ -171,7 +171,7 @@ client.on('ready',async ()=>{
         run()
     }
     else if(!config.messages[7]){
-        let newOverview = await client.createMessage('Overview')
+        let newOverview = await client.createMessage(config.channel,'Overview')
         newOverview = newOverview.id
         config.messages.push(newOverview)
         await fs.writeFileSync(__dirname+'/config.json',JSON.stringify(config))
