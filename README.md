@@ -48,3 +48,4 @@ A Discord Bot which will show the real-time status of Dyno
     * `0.1.2` - Rewrote functions/requests for better handling
 * 29 Jul 2019
     * `0.1.3` - Removed mathjs
+    * `0.1.4` - Added jumplinks and a second overview

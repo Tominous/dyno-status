@@ -84,19 +84,25 @@ async function req(){
                 else if(overallPercentage >= 50) color = 16751360
                 else if(overallPercentage < 50) color = 16728395
                 else color = undefined
-                return messages.push({
+                const guildID = client.getChannel(config.channel).guild.id
+                const jumpLinks = config.messages.map(l => `[${servers[config.messages.indexOf(l)]}](https://discordapp.com/channels/${guildID}/${config.channel}/${l})`).join('\n')
+                return {
                     content:'',
                     embed: {
                         title:'Overview',
                         description:`${shardsConnected}\n${clusterProblems}\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,
+                        fields:[{name:'Servers',value:jumpLinks}],
                         footer:{text:'Last updated'},
                         timestamp: new Date(),
                         color:color
                     }
-                })
+                }
             }catch(error){
                 messages.push({content:`**Error!**\n${error.message}`,embed:null})
             }
+        }
+        function overview(){
+            return messages.push(info())
         }
         function serverInfo(){
             for(const hi of servers){
@@ -109,8 +115,9 @@ async function req(){
                 }
             }
         }
-        info()
+        overview()
         serverInfo()
+        overview()
     }
     try{
         for(const id of config.messages){
@@ -138,21 +145,23 @@ client.on('ready',async ()=>{
         async function setup(){
             //Configures the messages
             try {
-                let overview = await client.createMessage(config.channel,'Overview')
+                let overview1 = await client.createMessage(config.channel,'Overview')
                 let titan = await client.createMessage(config.channel,'Titan')
                 let atlas = await client.createMessage(config.channel,'Atlas')
                 let pandora = await client.createMessage(config.channel,'Pandora')
                 let hyperion = await client.createMessage(config.channel,'Hyperion')
                 let enceladus = await client.createMessage(config.channel,'Enceladus')
                 let janus = await client.createMessage(config.channel,'Janus')
-                overview = overview.id
+                let overview2 = await client.createMessage(config.channel,'Overview')
+                overview1 = overview1.id
                 titan = titan.id
                 atlas = atlas.id
                 pandora = pandora.id
                 hyperion = hyperion.id
                 enceladus = enceladus.id
                 janus = janus.id
-                config.messages = [overview,titan,atlas,pandora,hyperion,enceladus,janus]
+                overview2 = overview2.id
+                config.messages = [overview1,titan,atlas,pandora,hyperion,enceladus,janus,overview2]
                 await fs.writeFileSync(__dirname+'/config.json',JSON.stringify(config)) //Saves it in case bot restarts
             } catch (error) {
                 throw new Error(error.stack)
@@ -161,8 +170,10 @@ client.on('ready',async ()=>{
         setup()
         run()
     }
-    else if(typeof config.messages === 'object'){
-        config.messages = Object.values(config.messages)
+    else if(!config.messages[7]){
+        let newOverview = await client.createMessage('Overview')
+        newOverview = newOverview.id
+        config.messages.push(newOverview)
         await fs.writeFileSync(__dirname+'/config.json',JSON.stringify(config))
         run()
     }
