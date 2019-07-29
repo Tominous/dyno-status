@@ -31,7 +31,7 @@ function formatter(name, server){
     const clusterOutage = server.filter(a => !a.result || (a.result && a.result.shardCount !== a.result.connectedCount))
     const clusterOutageCount = clusterOutage.length
     const clusterProblems = `${clusterOutageCount}/24 clusters with an outage`
-    const partialOutage = `${clusterOutage.filter(b => b.result.connectedCount > 3).length}/${clusterOutageCount} Partial Outage`
+    const partialOutage = `${clusterOutage.filter(s => s.result).filter(b => b.result.connectedCount > 3).length}/${clusterOutageCount} Partial Outage`
     const majorOutage = `${clusterOutage.filter(b => !b.result || b.result.connectedCount < 4).length}/${clusterOutageCount} Major Outage`
     const percentage = ((shardsConnected / 144)*100).toFixed(5)*1
     shardsConnected = shardsConnected+'/144 shards connected'
@@ -67,6 +67,7 @@ async function req(){
     catch(error){
         for(const lol of config.messages){
             messages.push(error.message)
+            console.log(error.message)
         }
     }
     if(!messages[0]){
@@ -80,12 +81,12 @@ async function req(){
                 const unavailableGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
                 const guildPerc = ((1 - unavailableGuilds / totalGuilds)*100).toFixed(5)*1
                 let color;
-                if(overallPercentage >= 80) color = 124622
-                else if(overallPercentage >= 50) color = 16751360
-                else if(overallPercentage < 50) color = 16728395
+                if(overallPercentage >= 90) color = 124622
+                else if(overallPercentage >= 65) color = 16751360
+                else if(overallPercentage < 65) color = 16728395
                 else color = undefined
                 const guildID = client.getChannel(config.channel).guild.id
-                const jumpLinks = config.messages.map(l => `[${servers[config.messages.indexOf(l)]}](https://discordapp.com/channels/${guildID}/${config.channel}/${l})`).join('\n')
+                const jumpLinks = config.messages.map(l => `[${servers.filter(a => a)[config.messages.indexOf(l)].name}](https://discordapp.com/channels/${guildID}/${config.channel}/${l})`).join('\n')
                 return {
                     content:'',
                     embed: {
@@ -99,6 +100,7 @@ async function req(){
                 }
             }catch(error){
                 messages.push({content:`**Error!**\n${error.message}`,embed:null})
+                console.error(error)
             }
         }
         function overview(){
@@ -112,6 +114,7 @@ async function req(){
                 }
                 catch(error){
                     messages.push({content:`**Error!**\n${error.message}`,embed:null})
+                    console.error(error)
                 }
             }
         }
