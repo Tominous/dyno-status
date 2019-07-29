@@ -5,7 +5,6 @@ const fs = require('fs')
 const Eris = require('eris')
 const client = new Eris(token)
 const axios = require('axios')
-const math = require('mathjs')
 
 function formatter(name, server){
     let fields = []
