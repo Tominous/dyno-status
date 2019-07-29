@@ -31,8 +31,15 @@ A Discord Bot which will show the real-time status of Dyno
  - I wanted to get myself involved in more JavaScript
  - I was bored. No joke. I had nothing to do.
 
-## Disclaimer
+## Issues/features/something you want?
+Feel free to create a ticket! I'll respond in some shape or form in a couple hours, depending if I have internet or not. 
+Few things to note if you're reporting a bug:
+* I will not fix bugs that are caused by improper setup or deletion/modification of crucual information (e.g. if the message containing the information was deleted)
+* Provide exactly where the issue is. Console logs are preferable and would be greatly appreciated
+* Include what version number you are using. If your x.0.0 or 0.x.0 versions are different, I will not accept them
+* Please please PLEASE, check if the bug you're reporting has already been reported. If it has and you think there's some information missing, feel free to provide it. 
 
+## Disclaimer
  - Although I am a Trusted member of Dyno, Dyno has no affiliation or relation with this project in any way. This was my own personal project, and I may remove this repository at the developer's request.
  - The bot was built on Node.js 10.16.0 LTS. I will support Node versions 10+, however if bugs occur on versions below Node 10, I will not fix them. However, if you wish to fix any bugs relating to this, feel free to make a PR.
 
