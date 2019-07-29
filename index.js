@@ -86,7 +86,7 @@ async function req(){
                 else if(overallPercentage < 65) color = 16728395
                 else color = undefined
                 const guildID = client.getChannel(config.channel).guild.id
-                const jumpLinks = config.messages.slice(1,7).map(l => `[${servers.filter(a => a)[config.messages.indexOf(l)].name}](https://discordapp.com/channels/${guildID}/${config.channel}/${l})`).join('\n')
+                const jumpLinks = config.messages.slice(1,7).map(l => `[${servers.filter(a => a)[config.messages.slice(1,7).indexOf(l)].name}](https://discordapp.com/channels/${guildID}/${config.channel}/${l})`).join('\n')
                 return {
                     content:'',
                     embed: {
