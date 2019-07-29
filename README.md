@@ -52,3 +52,4 @@ A Discord Bot which will show the real-time status of Dyno
     * `0.1.5` - Various fixes
     * `0.1.6` - Overview changed to inline fields
     * `0.1.7` - Server jumplinks added status emoji and connected shard count
+    * `0.1.8` - Bad code made better

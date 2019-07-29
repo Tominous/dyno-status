@@ -44,12 +44,15 @@ function formatter(name, server){
     else if(percentage < 75) color = 16728395
     else color = undefined //if something happens that's unknown
     return {
-        description: `${shardsConnected}\n${clusterProblems}\n${partialOutage}\n${majorOutage}\n${percentage}% connected\n\n${serverGuildCount} guilds\n${serverUnavailableCount} unavailable\n${serverGuildPerc}% connected`,
-        fields: fields,
-        footer:{text:'Last updated'},
-        timestamp: new Date(),
-        color:color,
-        title:name
+        embed:{
+            description: `${shardsConnected}\n${clusterProblems}\n${partialOutage}\n${majorOutage}\n${percentage}% connected\n\n${serverGuildCount} guilds\n${serverUnavailableCount} unavailable\n${serverGuildPerc}% connected`,
+            fields: fields,
+            footer:{text:'Last updated'},
+            timestamp: new Date(),
+            color:color,
+            title:name
+        },
+        content:''
     } // Full embed constructed
 }
 
@@ -122,7 +125,7 @@ async function req(){
             for(const hi of servers){
                 try{
                     const haha = formatter(hi.server,hi.status)
-                    messages.push({content:'',embed:haha})
+                    messages.push(haha)
                 }
                 catch(error){
                     messages.push({content:`**Error!**\n${error.message}`,embed:null})
