@@ -60,3 +60,4 @@ Few things to note if you're reporting a bug:
     * `0.1.6` - Overview changed to inline fields
     * `0.1.7` - Server jumplinks added status emoji and connected shard count
     * `0.1.8` - Bad code made better
+    * `0.1.9` - Fixed jumplink status

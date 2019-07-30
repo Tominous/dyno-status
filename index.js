@@ -89,9 +89,10 @@ async function req(){
                 else if(overallPercentage < 65) color = 16728395
                 else color = undefined
                 const guildID = client.getChannel(config.channel).guild.id
-                const jumpLinks = config.messages.slice(1,7).map(l => {
-                    const server = servers.filter(a => a)[config.messages.slice(1,7).indexOf(l)]
-                    let serverPerc = servers.filter(s => s.result).map(a => a.result.connectedCount).reduce((a,b) => a+b,0)
+                const servMsg = config.messages.slice(1,7)
+                const jumpLinks = servMsg.map(l => {
+                    const server = servers.filter(a => a)[servMsg.indexOf(l)]
+                    let serverPerc = server.status.map(a => a.result.connectedCount).reduce((a,b) => a+b,0)
                     let serverPercEmoji
                     if(serverPerc/144 >= 0.9) serverPercEmoji = '✅'
                     else if(serverPerc/144 >= 0.75) serverPercEmoji = '⚠'
