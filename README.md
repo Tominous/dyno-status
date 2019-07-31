@@ -62,3 +62,4 @@ Few things to note if you're reporting a bug:
     * `0.1.8` - Bad code made better
     * `0.1.9` - Fixed jumplink status
     * `0.1.10` - Fixed a rare `'connectedCount' of undefined` TypeError
+    * `0.1.11` - Increased request timeouts to 60 seconds

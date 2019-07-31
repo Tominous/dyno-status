@@ -3,7 +3,7 @@ let config = require('./config.json')
 const token = config.token
 const fs = require('fs')
 const Eris = require('eris')
-const client = new Eris(token)
+const client = new Eris(token,{requestTimeout:60000})
 const axios = require('axios')
 
 function formatter(name, server){
