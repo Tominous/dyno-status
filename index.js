@@ -92,7 +92,7 @@ async function req(){
                 const servMsg = config.messages.slice(1,7)
                 const jumpLinks = servMsg.map(l => {
                     const server = servers.filter(a => a)[servMsg.indexOf(l)]
-                    let serverPerc = server.status.map(a => a.result.connectedCount).reduce((a,b) => a+b,0)
+                    let serverPerc = server.status.filter(s => s.result).map(a => a.result.connectedCount).reduce((a,b) => a+b,0)
                     let serverPercEmoji
                     if(serverPerc/144 >= 0.9) serverPercEmoji = '✅'
                     else if(serverPerc/144 >= 0.75) serverPercEmoji = '⚠'
