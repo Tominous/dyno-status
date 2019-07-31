@@ -64,3 +64,4 @@ Few things to note if you're reporting a bug:
 * 31 July 2019
     * `0.1.10` - Fixed a rare `'connectedCount' of undefined` TypeError
     * `0.1.11` - Increased request timeouts to 60 seconds
+    * `0.1.12` - Added beta branch. All unstable updates will go there.
