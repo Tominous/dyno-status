@@ -54,13 +54,7 @@ Few things to note if you're reporting a bug:
 * 28 Jul 2019
     * `0.1.2` - Rewrote functions/requests for better handling
 * 29 Jul 2019
-    * `0.1.3` - Removed mathjs
-    * `0.1.4` - Added jumplinks and a second overview
-    * `0.1.5` - Various fixes
-    * `0.1.6` - Overview changed to inline fields
-    * `0.1.7` - Server jumplinks added status emoji and connected shard count
-    * `0.1.8` - Bad code made better
-    * `0.1.9` - Fixed jumplink status
+    * `0.1.3 - 0.1.9` - Removed mathjs, Added jumplinks and a second overview, Various fixes, Overview changed to inline fields, Server jumplinks added status emoji and connected shard count, Bad code made better, Fixed jumplink status
 * 31 July 2019
     * `0.1.10` - Fixed a rare `'connectedCount' of undefined` TypeError
     * `0.1.11` - Increased request timeouts to 60 seconds
