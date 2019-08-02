@@ -153,7 +153,7 @@ function run(){
     req()
     setInterval(()=>{
         req()
-    },20000)
+    },45000)
 }
 
 client.on('ready',async ()=>{

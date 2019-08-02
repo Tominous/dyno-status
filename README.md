@@ -55,7 +55,9 @@ Few things to note if you're reporting a bug:
     * `0.1.2` - Rewrote functions/requests for better handling
 * 29 Jul 2019
     * `0.1.3 - 0.1.9` - Removed mathjs, Added jumplinks and a second overview, Various fixes, Overview changed to inline fields, Server jumplinks added status emoji and connected shard count, Bad code made better, Fixed jumplink status
-* 31 July 2019
+* 31 Jul 2019
     * `0.1.10` - Fixed a rare `'connectedCount' of undefined` TypeError
     * `0.1.11` - Increased request timeouts to 60 seconds
     * `0.1.12` - Added beta branch. All unstable updates will go there.
+* 2 Aug 2019
+    * `0.1.13` - Changed request interval to 45 seconds
