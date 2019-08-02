@@ -61,3 +61,4 @@ Few things to note if you're reporting a bug:
     * `0.1.12` - Added beta branch. All unstable updates will go there.
 * 2 Aug 2019
     * `0.1.13` - Changed request interval to 45 seconds
+    * `0.1.14` - ESLinted the whole repo

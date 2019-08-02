@@ -1,3 +1,5 @@
+/* eslint-disable require-atomic-updates */
+/* eslint-disable no-inner-declarations */
 // DO NOT REMOVE ANY OF THE BELOW
 let config = require('./config.json')
 const token = config.token
@@ -68,7 +70,7 @@ async function req(){
         }
     }
     catch(error){
-        for(const lol of config.messages){
+        for(let i = 0; i < config.messages; i++){
             messages.push(error.message)
             console.log(error.message)
         }
