@@ -61,6 +61,7 @@ function formatter(name, server){
 async function req(){
     const servers = []
     const messages = []
+    let success = true
     try{
         const {data} = await axios.get('https://dyno.gg/api/status')
         const info = Object.values(data)
@@ -71,11 +72,12 @@ async function req(){
     }
     catch(error){
         console.log(error.message)
+        success = false
         for(let i = 0; i < config.messages; i++){
             messages.push(error.message)
         }
     }
-    if(!messages[0]){
+    if(success){
         function info(){
             try {
                 let shardsConnected = servers.map(a => a.status.filter(s => s.result).map(b => b.result.connectedCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
