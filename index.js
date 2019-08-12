@@ -71,7 +71,6 @@ async function req(){
         }
     }
     catch(error){
-        console.log(error.message)
         success = false
         for(let i = 0; i < config.messages.length; i++){
             messages.push({content:`**Error!**\n${error.message}`,embed:null})
