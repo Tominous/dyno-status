@@ -70,9 +70,9 @@ async function req(){
         }
     }
     catch(error){
+        console.log(error.message)
         for(let i = 0; i < config.messages; i++){
             messages.push(error.message)
-            console.log(error.message)
         }
     }
     if(!messages[0]){

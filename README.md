@@ -62,3 +62,5 @@ Few things to note if you're reporting a bug:
 * 2 Aug 2019
     * `0.1.13` - Changed request interval to 45 seconds
     * `0.1.14` - ESLinted the whole repo
+* 12 Aug 2019
+    * `0.1.15` - API errors will now console log once instead of 8 times
