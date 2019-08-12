@@ -47,7 +47,7 @@ function formatter(name, server){
     else color = undefined //if something happens that's unknown
     return {
         embed:{
-            description: `${shardsConnected}\n${clusterProblems}\n${partialOutage}\n${majorOutage}\n${percentage}% connected\n\n${serverGuildCount} guilds\n${serverUnavailableCount} unavailable\n${serverGuildPerc}% connected`,
+            description: `${shardsConnected}\n${clusterProblems}\n${partialOutage}\n${majorOutage}\n${Number.isNaN(percentage) ? 0 : percentage}% connected\n\n${serverGuildCount} guilds\n${serverUnavailableCount} unavailable\n${Number.isNaN(serverGuildPerc) ? 0 : serverGuildPerc}% connected`,
             fields: fields,
             footer:{text:'Last updated'},
             timestamp: new Date(),
@@ -111,7 +111,7 @@ async function req(){
                     embed: {
                         title:'Dyno Status',
                         fields:[
-                            {name:'Overview',value:`${shardsConnected}\n${clusterProblems}\n${overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${guildPerc}% available`,inline:true},
+                            {name:'Overview',value:`${shardsConnected}\n${clusterProblems}\n${Number.isNaN(overallPercentage) ? 0 : overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${Number.isNaN(guildPerc) ? 0 : guildPerc}% available`,inline:true},
                             {name:'Servers',value:jumpLinks,inline:true}],
                         footer:{text:'Last updated'},
                         timestamp: new Date(),
