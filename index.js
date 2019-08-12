@@ -146,7 +146,7 @@ async function req(){
         try{
             const information = messages.filter(a => a)[config.messages.indexOf(id)]
             console.log(information)
-            client.editMessage(config.channel,id,information)
+            await client.editMessage(config.channel,id,information)
         }
         catch(error){
             return console.error('hi')
