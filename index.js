@@ -73,10 +73,9 @@ async function req(){
     catch(error){
         console.log(error.message)
         success = false
-        for(let i = 0; i < config.messages; i++){
+        for(let i = 0; i < config.messages.length; i++){
             messages.push({content:`**Error!**\n${error.message}`,embed:null})
         }
-        console.log(config.messages)
     }
     if(success){
         function info(){
@@ -149,7 +148,7 @@ async function req(){
             await client.editMessage(config.channel,id,information)
         }
         catch(error){
-            return console.error(error.message)
+            return console.error(error)
         }
     }
 }
