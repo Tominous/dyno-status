@@ -76,6 +76,7 @@ async function req(){
         for(let i = 0; i < config.messages; i++){
             messages.push({content:`**Error!**\n${error.message}`,embed:null})
         }
+        console.log(messages)
     }
     if(success){
         function info(){
@@ -144,10 +145,7 @@ async function req(){
     }
     for(const id of config.messages){
         try{
-            console.log(config.messages.indexOf(id))
-            console.log(messages)
             const information = messages.filter(a => a)[config.messages.indexOf(id)]
-            console.log(information)
             await client.editMessage(config.channel,id,information)
         }
         catch(error){
