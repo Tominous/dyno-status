@@ -75,6 +75,7 @@ async function req(){
         success = false
         for(let i = 0; i < config.messages; i++){
             messages.push({content:`**Error!**\n${error.message}`,embed:null})
+            console.log(messages)
         }
         console.log(messages)
     }
