@@ -28,8 +28,8 @@ function formatter(name, server) {
             const shards = result.shards.join(', ').length > 32 ? `${result.shards.slice(0, result.shards.length / 2).join()},\n${result.shards.slice(result.shards.length / 2).join()}` : result.shards.join();
             const { uptime } = result;
             let status;
-            if (connected.startsWith('6')) status = '✅';
-            else if (connected.startsWith('5') || connected.startsWith('4')) status = '⚠';
+            if (result.connectedCount / result.shardCount > 0.9) status = '✅';
+            else if (result.connectedCount / result.shardCount > 0.5) status = '⚠';
             else status = '❗'; // Includes any errors the cluster may have
             const formatted = { name: `${status} Cluster ${clusterId} (${connected})`, value: `${shards}\nGuilds: ${guildCount}\nUnavailable: ${unavailableCount}\nVoice: ${voiceConnections}\nUp: ${uptime}`, inline: true };
             fields.push(formatted);
