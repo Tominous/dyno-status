@@ -6,7 +6,7 @@ const token = config.token
 const fs = require('fs')
 const Eris = require('eris')
 const client = new Eris(token,{requestTimeout:60000})
-const axios = require('axios')
+const {get} = require('axios')
 
 function formatter(name, server){
     let fields = []
@@ -19,7 +19,7 @@ function formatter(name, server){
             const {guildCount} = result
             const {unavailableCount} = result
             const {voiceConnections} = result
-            const shards = result.shards.join()
+            const shards = `${result.shards.slice(0,result.shards.length - 1).join()},\n${result.shards.slice(result,shards.length).join()}`
             const {uptime} = result
             let status;
             if(connected.startsWith('6')) status = '✅'
@@ -35,8 +35,9 @@ function formatter(name, server){
     const clusterProblems = `${clusterOutageCount}/24 clusters with an outage`
     const partialOutage = `${clusterOutage.filter(s => s.result).filter(b => b.result.connectedCount > 3).length}/${clusterOutageCount} Partial Outage`
     const majorOutage = `${clusterOutage.filter(b => !b.result || b.result.connectedCount < 4).length}/${clusterOutageCount} Major Outage`
-    const percentage = ((shardsConnected / 144)*100).toFixed(5)*1
-    shardsConnected = shardsConnected+'/144 shards connected'
+    const shardCount = server.filter(s => s.result).map(a => a.result.shardCount).reduce((a,b) => a+b,0)
+    const percentage = ((shardsConnected / shardCount)*100).toFixed(5)*1
+    shardsConnected = `${shardsConnected}/${shardCount} shards connected`
     const serverGuildCount = server.filter(s => s.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)
     const serverUnavailableCount = server.filter(s => s.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)
     const serverGuildPerc = ((1 - serverUnavailableCount/serverGuildCount)*100).toFixed(5) * 1 //fix unnecessary decimal places
@@ -63,7 +64,7 @@ async function req(){
     const messages = []
     let success = true
     try{
-        const {data} = await axios.get('https://dyno.gg/api/status')
+        const {data} = await get('https://dyno.gg/api/status')
         const info = Object.values(data)
         const name = Object.keys(data)
         for(const a of info){
@@ -80,9 +81,10 @@ async function req(){
         function info(){
             try {
                 let shardsConnected = servers.map(a => a.status.filter(s => s.result).map(b => b.result.connectedCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
-                const clusterProblems = `${servers.map(a => a.status.filter(s => s.result).filter(b => b.result.shardCount !== b.result.connectedCount).length).reduce((a,b) => a+b,0)}/144 clusters with problems`
-                const overallPercentage = ((shardsConnected/864)*100).toFixed(5)*1
-                shardsConnected = shardsConnected+'/864 shards connected'
+                const totalShards = servers.map(i => i.status.filter(a => a.result).map(n => n.result.shardCount).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
+                const clusterProblems = `${servers.map(a => a.status.filter(s => s.result).filter(b => b.result.shardCount !== b.result.connectedCount).length).reduce((a,b) => a+b,0)}/${totalShards} clusters with problems`
+                const overallPercentage = ((shardsConnected/totalShards)*100).toFixed(5)*1
+                shardsConnected = `${shardsConnected}/${totalShards} shards connected`
                 const totalGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.guildCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
                 const unavailableGuilds = servers.map(s => s.status.filter(g => g.result).map(a => a.result.unavailableCount).reduce((a,b) => a+b,0)).reduce((a,b) => a+b,0)
                 const guildPerc = ((1 - unavailableGuilds / totalGuilds)*100).toFixed(5)*1
@@ -95,13 +97,14 @@ async function req(){
                 const servMsg = config.messages.slice(1,7)
                 const jumpLinks = servMsg.map(l => {
                     const server = servers.filter(a => a)[servMsg.indexOf(l)]
+                    const shardCount = server.status.filter(s => s.result).map(a => a.result.shardCount).reduce((a,b) => a+b,0)
                     let serverPerc = server.status.filter(s => s.result).map(a => a.result.connectedCount).reduce((a,b) => a+b,0)
                     let serverPercEmoji
-                    if(serverPerc/144 >= 0.9) serverPercEmoji = '✅'
-                    else if(serverPerc/144 >= 0.75) serverPercEmoji = '⚠'
-                    else if(serverPerc/144 < 0.75) serverPercEmoji = '❗'
+                    if(serverPerc/shardCount >= 0.9) serverPercEmoji = '✅'
+                    else if(serverPerc/shardCount >= 0.75) serverPercEmoji = '⚠'
+                    else if(serverPerc/shardCount < 0.75) serverPercEmoji = '❗'
                     else serverPercEmoji = '❔'
-                    serverPerc = `${serverPerc}/144 shards`
+                    serverPerc = `${serverPerc}/${shardCount} shards`
                     const serverName = server.server
                     return `${serverPercEmoji} [${serverName} (${serverPerc})](https://discordapp.com/channels/${guildID}/${config.channel}/${l})`
                 }).join('\n')

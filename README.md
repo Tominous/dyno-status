@@ -64,3 +64,5 @@ Few things to note if you're reporting a bug:
     * `0.1.14` - ESLinted the whole repo
 * 12 Aug 2019
     * `0.1.15` - Bug fixes
+* 13 Aug 2019
+    * `0.1.16` - Resharding update
