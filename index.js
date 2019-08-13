@@ -25,7 +25,7 @@ function formatter(name, server) {
             const { guildCount } = result;
             const { unavailableCount } = result;
             const { voiceConnections } = result;
-            const shards = results.shards.join().length > 21 ? `${result.shards.slice(0, result.shards.length / 2).join()},\n${result.shards.slice(result.shards.length / 2).join()}` : result.shards.join();
+            const shards = result.shards.join().length > 21 ? `${result.shards.slice(0, result.shards.length / 2).join()},\n${result.shards.slice(result.shards.length / 2).join()}` : result.shards.join();
             const { uptime } = result;
             let status;
             if (connected.startsWith('6')) status = '✅';
