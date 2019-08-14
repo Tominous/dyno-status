@@ -89,7 +89,7 @@ async function req() {
             try {
                 let shardsConnected = servers.map((a) => a.status.filter((s) => s.result).map((b) => b.result.connectedCount).reduce((n, i) => n + i, 0)).reduce((a, b) => a + b, 0);
                 const totalShards = servers.map((i) => i.status.filter((a) => a.result).map((n) => n.result.shardCount).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
-                const clusterProblems = `${servers.map((a) => a.status.filter((s) => s.result).filter((b) => b.result.shardCount !== b.result.connectedCount).length).reduce((a, b) => a + b, 0)}/${totalShards} clusters with problems`;
+                const clusterProblems = `${servers.map((a) => a.status.filter((s) => s.result).filter((b) => b.result.shardCount !== b.result.connectedCount).length).reduce((a, b) => a + b, 0)}/${servers.map(t => t.status.length).reduce((a, b) => a + b, 0)} clusters with problems`;
                 const overallPercentage = ((shardsConnected / totalShards) * 100).toFixed(5) * 1;
                 shardsConnected = `${shardsConnected}/${totalShards} shards connected`;
                 const totalGuilds = servers.map((s) => s.status.filter((g) => g.result).map((a) => a.result.guildCount).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
