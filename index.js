@@ -219,7 +219,7 @@ client.on('ready', async () => {
         if (serverCount !== statusInfo.servers.total) statusInfo.servers.total = serverCount
         if (CpS !== statusInfo.clusters.perServer) { statusInfo.clusters.perServer = CpS; statusInfo.clusters.total = CpS * serverCount}
         if (SpC !== statusInfo.shards.perCluster) { statusInfo.shards.perCluster = SpC; statusInfo.shards.perServer = CpS * SpC; statusInfo.shards.total = SpC * CpS * serverCount}
-        await fs.writeFileSync('./statusinfo.json', statusInfo)
+        await fs.writeFileSync('./statusinfo.json', JSON.stringify(statusInfo))
         run()
     };
 });
