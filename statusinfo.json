@@ -1,0 +1,5 @@
+{
+    "shards":{ "perCluster": 8, "perServer": 192, "total": 1152 },
+    "clusters": { "perServer": 24, "total": 144 },
+    "servers": { "total": 6 }
+}

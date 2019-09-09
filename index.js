@@ -10,6 +10,7 @@ const fs = require('fs');
 const Eris = require('eris');
 const { get } = require('axios');
 const config = require('./config.json');
+let statusInfo = require('./statusinfo.json')
 
 const { token } = config;
 const client = new Eris(token, { requestTimeout: 60000 });
@@ -21,15 +22,15 @@ function formatter(name, server) {
         if (!result) fields.push({ name: `❗ Cluster ${server.indexOf(s)} (0/0)`, value: '**__Cluster offline__**', inline: true });
         else {
             const { clusterId } = result;
-            const connected = `${result.connectedCount}/${result.shardCount}`;
+            const connected = `${result.connectedCount}/${statusInfo.shards.perCluster}`;
             const { guildCount } = result;
             const { unavailableCount } = result;
             const { voiceConnections } = result;
             const shards = result.shards.join(', ').length > 32 ? `${result.shards.slice(0, result.shards.length / 2).join()},\n${result.shards.slice(result.shards.length / 2).join()}` : result.shards.join();
             const { uptime } = result;
             let status;
-            if (result.connectedCount / result.shardCount > 0.9) status = '✅';
-            else if (result.connectedCount / result.shardCount > 0.5) status = '⚠';
+            if (result.connectedCount / statusInfo.shards.perCluster > 0.9) status = '✅';
+            else if (result.connectedCount / statusInfo.shards.perCluster > 0.5) status = '⚠';
             else status = '❗'; // Includes any errors the cluster may have
             const formatted = { name: `${status} Cluster ${clusterId} (${connected})`, value: `${shards}\nGuilds: ${guildCount}\nUnavailable: ${unavailableCount}\nVoice: ${voiceConnections}\nUp: ${uptime}`, inline: true };
             fields.push(formatted);
@@ -38,12 +39,11 @@ function formatter(name, server) {
     let shardsConnected = server.filter((s) => s.result).map((a) => a.result.connectedCount).reduce((a, b) => a + b, 0);
     const clusterOutage = server.filter((a) => !a.result || (a.result && a.result.shardCount !== a.result.connectedCount));
     const clusterOutageCount = clusterOutage.length;
-    const clusterProblems = `${clusterOutageCount}/24 clusters with an outage`;
+    const clusterProblems = `${clusterOutageCount}/${statusInfo.clusters.perServer} clusters with an outage`;
     const partialOutage = `${clusterOutage.filter((s) => s.result).filter((b) => b.result.connectedCount > 3).length}/${clusterOutageCount} Partial Outage`;
     const majorOutage = `${clusterOutage.filter((b) => !b.result || b.result.connectedCount < 4).length}/${clusterOutageCount} Major Outage`;
-    const shardCount = server.filter((s) => s.result).map((a) => a.result.shardCount).reduce((a, b) => a + b, 0);
-    const percentage = ((shardsConnected / shardCount) * 100).toFixed(5) * 1;
-    shardsConnected = `${shardsConnected}/${shardCount} shards connected`;
+    const percentage = ((shardsConnected / statusInfo.shards.perServer) * 100).toFixed(5) * 1;
+    shardsConnected = `${shardsConnected}/${statusInfo.shards.perServer} shards connected`;
     const serverGuildCount = server.filter((s) => s.result).map((a) => a.result.guildCount).reduce((a, b) => a + b, 0);
     const serverUnavailableCount = server.filter((s) => s.result).map((a) => a.result.unavailableCount).reduce((a, b) => a + b, 0);
     const serverGuildPerc = ((1 - serverUnavailableCount / serverGuildCount) * 100).toFixed(5) * 1; // fix unnecessary decimal places
@@ -88,8 +88,8 @@ async function req() {
         function info() {
             try {
                 let shardsConnected = servers.map((a) => a.status.filter((s) => s.result).map((b) => b.result.connectedCount).reduce((n, i) => n + i, 0)).reduce((a, b) => a + b, 0);
-                const totalShards = servers.map((i) => i.status.filter((a) => a.result).map((n) => n.result.shardCount).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
-                const clusterProblems = `${servers.map((a) => a.status.filter((s) => s.result).filter((b) => b.result.shardCount !== b.result.connectedCount).length).reduce((a, b) => a + b, 0)}/${servers.map(t => t.status.length).reduce((a, b) => a + b, 0)} clusters with problems`;
+                const totalShards = statusInfo.shards.total
+                const clusterProblems = `${servers.map((a) => a.status.filter((s) => s.result).filter((b) => b.result.shardCount !== b.result.connectedCount).length).reduce((a, b) => a + b, 0)}/${statusInfo.clusters.total} clusters with problems`;
                 const overallPercentage = ((shardsConnected / totalShards) * 100).toFixed(5) * 1;
                 shardsConnected = `${shardsConnected}/${totalShards} shards connected`;
                 const totalGuilds = servers.map((s) => s.status.filter((g) => g.result).map((a) => a.result.guildCount).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0);
@@ -104,7 +104,7 @@ async function req() {
                 const servMsg = config.messages.slice(1, 7);
                 const jumpLinks = servMsg.map((l) => {
                     const server = servers.filter((a) => a)[servMsg.indexOf(l)];
-                    const shardCount = server.status.filter((s) => s.result).map((a) => a.result.shardCount).reduce((a, b) => a + b, 0);
+                    const shardCount = statusInfo.shards.perServer
                     let serverPerc = server.status.filter((s) => s.result).map((a) => a.result.connectedCount).reduce((a, b) => a + b, 0);
                     let serverPercEmoji;
                     if (serverPerc / shardCount >= 0.9) serverPercEmoji = '✅';
@@ -119,6 +119,7 @@ async function req() {
                     content: '',
                     embed: {
                         title: 'Dyno Status',
+                        description: '[Dyno Status page - https://dyno.gg/status](https://dyno.gg/status)',
                         fields: [
                             { name: 'Overview', value: `${shardsConnected}\n${clusterProblems}\n${Number.isNaN(overallPercentage) ? 0 : overallPercentage}% online\n\n${totalGuilds} guilds\n${unavailableGuilds} unavailable\n${Number.isNaN(guildPerc) ? 0 : guildPerc}% available`, inline: true },
                             { name: 'Servers', value: jumpLinks, inline: true }],
@@ -206,7 +207,18 @@ client.on('ready', async () => {
         config.messages.push(newOverview);
         await fs.writeFileSync(`${__dirname}/config.json`, JSON.stringify(config));
         run();
-    } else run();
+    } else {
+        const {data} = await get('https://dyno.gg/api/status')
+        if (!data) return run()
+        const serverCount = Object.keys(data).length
+        const CpS = Object.values(data)[0].length // Clusters per Server
+        const SpC = Object.values(data)[0].result.shardCount // Shards per Cluster
+        if (serverCount !== statusInfo.servers.total) statusInfo.servers.total = serverCount
+        if (CpS !== statusInfo.clusters.perServer) { statusInfo.clusters.perServer = CpS; statusInfo.clusters.total = CpS * serverCount}
+        if (SpC !== statusInfo.shards.perCluster) { statusInfo.shards.perCluster = SpC; statusInfo.shards.perServer = CpS * SpC; statusInfo.shards.total = SpC * CpS * serverCount}
+        await fs.writeFileSync('./statusinfo.json', statusInfo)
+        run()
+    };
 });
 
 // You can do other stuff here
