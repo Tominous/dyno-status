@@ -215,7 +215,7 @@ client.on('ready', async () => {
         if (!data) return run()
         const serverCount = Object.keys(data).length
         const CpS = Object.values(data)[0].length // Clusters per Server
-        const SpC = Object.values(data)[0].result.shardCount // Shards per Cluster
+        const SpC = Object.values(data)[0][0].result.shardCount // Shards per Cluster
         if (serverCount !== statusInfo.servers.total) statusInfo.servers.total = serverCount
         if (CpS !== statusInfo.clusters.perServer) { statusInfo.clusters.perServer = CpS; statusInfo.clusters.total = CpS * serverCount}
         if (SpC !== statusInfo.shards.perCluster) { statusInfo.shards.perCluster = SpC; statusInfo.shards.perServer = CpS * SpC; statusInfo.shards.total = SpC * CpS * serverCount}
