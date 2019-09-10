@@ -26,10 +26,7 @@ function formatter(name, server) {
             const { guildCount } = result;
             const { unavailableCount } = result;
             const { voiceConnections } = result;
-            const { shardStatus } = result;
-            const shardConnectedStatus = [];
-            shardStatus.forEach((shard) => { if (shard.status !== 'ready') shardConnectedStatus.push(`**${shard.id}**`); else shardConnectedStatus.push(shard.id); });
-            const shards = shardConnectedStatus.join(', ').replace(/\*/g, '').length > 32 ? `${result.shards.slice(0, result.shards.length / 2).join()},\n${result.shards.slice(result.shards.length / 2).join()}` : result.shards.join();
+            const shards = result.shards.join(', ').length > 32 ? `${result.shards.slice(0, result.shards.length / 2).join()},\n${result.shards.slice(result.shards.length / 2).join()}` : result.shards.join();
             const { uptime } = result;
             let status;
             if (result.connectedCount / statusInfo.shards.perCluster > 0.9) status = '✅';

@@ -67,4 +67,4 @@ Few things to note if you're reporting a bug:
 * 13 Aug 2019
     * `0.1.16` - Resharding update
 * 09 Sep 2019
-    * `0.1.17` - Reconfigured for future resharding, added individual shard status indicators
+    * `0.1.17` - Reconfigured for future resharding
