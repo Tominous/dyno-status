@@ -10,7 +10,7 @@ const fs = require('fs');
 const Eris = require('eris');
 const { get } = require('axios');
 const config = require('./config.json');
-let statusInfo = require('./statusinfo.json')
+const statusInfo = require('./statusinfo.json');
 
 const { token } = config;
 const client = new Eris(token, { requestTimeout: 60000 });
@@ -28,8 +28,8 @@ function formatter(name, server) {
             const { voiceConnections } = result;
             const { shardStatus } = result;
             const shardConnectedStatus = [];
-            shardStatus.forEach(shard => { if (shard.status !== 'ready') shardConnectedStatus.push(`**${shard.id}**`); else shardConnectedStatus.push(shard.id) })
-            const status = shardConnectedStatus.join(', ').replace(/\*/g, '').length > 32 ? `${result.shards.slice(0, result.shards.length / 2).join()},\n${result.shards.slice(result.shards.length / 2).join()}` : result.shards.join();
+            shardStatus.forEach((shard) => { if (shard.status !== 'ready') shardConnectedStatus.push(`**${shard.id}**`); else shardConnectedStatus.push(shard.id); });
+            const shards = shardConnectedStatus.join(', ').replace(/\*/g, '').length > 32 ? `${result.shards.slice(0, result.shards.length / 2).join()},\n${result.shards.slice(result.shards.length / 2).join()}` : result.shards.join();
             const { uptime } = result;
             let status;
             if (result.connectedCount / statusInfo.shards.perCluster > 0.9) status = '✅';
@@ -91,7 +91,7 @@ async function req() {
         function info() {
             try {
                 let shardsConnected = servers.map((a) => a.status.filter((s) => s.result).map((b) => b.result.connectedCount).reduce((n, i) => n + i, 0)).reduce((a, b) => a + b, 0);
-                const totalShards = statusInfo.shards.total
+                const totalShards = statusInfo.shards.total;
                 const clusterProblems = `${servers.map((a) => a.status.filter((s) => s.result).filter((b) => b.result.shardCount !== b.result.connectedCount).length).reduce((a, b) => a + b, 0)}/${statusInfo.clusters.total} clusters with problems`;
                 const overallPercentage = ((shardsConnected / totalShards) * 100).toFixed(5) * 1;
                 shardsConnected = `${shardsConnected}/${totalShards} shards connected`;
@@ -107,7 +107,7 @@ async function req() {
                 const servMsg = config.messages.slice(1, 7);
                 const jumpLinks = servMsg.map((l) => {
                     const server = servers.filter((a) => a)[servMsg.indexOf(l)];
-                    const shardCount = statusInfo.shards.perServer
+                    const shardCount = statusInfo.shards.perServer;
                     let serverPerc = server.status.filter((s) => s.result).map((a) => a.result.connectedCount).reduce((a, b) => a + b, 0);
                     let serverPercEmoji;
                     if (serverPerc / shardCount >= 0.9) serverPercEmoji = '✅';
@@ -211,17 +211,17 @@ client.on('ready', async () => {
         await fs.writeFileSync(`${__dirname}/config.json`, JSON.stringify(config));
         run();
     } else {
-        const {data} = await get('https://dyno.gg/api/status')
-        if (!data) return run()
-        const serverCount = Object.keys(data).length
-        const CpS = Object.values(data)[0].length // Clusters per Server
-        const SpC = Object.values(data)[0][0].result.shardCount // Shards per Cluster
-        if (serverCount !== statusInfo.servers.total) statusInfo.servers.total = serverCount
-        if (CpS !== statusInfo.clusters.perServer) { statusInfo.clusters.perServer = CpS; statusInfo.clusters.total = CpS * serverCount}
-        if (SpC !== statusInfo.shards.perCluster) { statusInfo.shards.perCluster = SpC; statusInfo.shards.perServer = CpS * SpC; statusInfo.shards.total = SpC * CpS * serverCount}
-        await fs.writeFileSync('./statusinfo.json', JSON.stringify(statusInfo))
-        run()
-    };
+        const { data } = await get('https://dyno.gg/api/status');
+        if (!data) { run(); return; }
+        const serverCount = Object.keys(data).length;
+        const CpS = Object.values(data)[0].length; // Clusters per Server
+        const SpC = Object.values(data)[0][0].result.shardCount; // Shards per Cluster
+        if (serverCount !== statusInfo.servers.total) statusInfo.servers.total = serverCount;
+        if (CpS !== statusInfo.clusters.perServer) { statusInfo.clusters.perServer = CpS; statusInfo.clusters.total = CpS * serverCount; }
+        if (SpC !== statusInfo.shards.perCluster) { statusInfo.shards.perCluster = SpC; statusInfo.shards.perServer = CpS * SpC; statusInfo.shards.total = SpC * CpS * serverCount; }
+        await fs.writeFileSync('./statusinfo.json', JSON.stringify(statusInfo));
+        run();
+    }
 });
 
 // You can do other stuff here
